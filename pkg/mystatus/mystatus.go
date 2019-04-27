@@ -8,7 +8,7 @@ import (
 
 var blocks = []barBlock{
 	&ipAddressBlock{
-		interfaceName: "enp3s0",
+		interfaceNames: []string{"enp3s0", "wlp3s0", "enx503eaa70e8da"},
 	},
 	&resourceChartBlock{
 		dangerTreshhold: 70,
@@ -22,6 +22,7 @@ var blocks = []barBlock{
 		baseColor:       "#2ecc71",
 		dangerColor:     "#e67e22",
 	},
+	&batteryBlock{},
 	&clockBlock{
 		format: "2006-01-02 15:04:05",
 	},

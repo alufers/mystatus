@@ -7,29 +7,42 @@ import (
 )
 
 type ipAddressBlock struct {
-	interfaceName string
+	interfaceName  string
+	interfaceNames []string
+}
+
+func (cb *ipAddressBlock) hadInterface(name string) bool {
+	for _, i := range cb.interfaceNames {
+		if i == name {
+			return true
+		}
+	}
+	return false
 }
 
 func (cb *ipAddressBlock) Render() barBlockData {
-	var text string
+	fullText := ""
 	interfaces, err := net.Interfaces()
 	if err != nil {
-		text = "IP error: " + err.Error()
+		fullText = "IP error: " + err.Error()
 	} else {
 		for _, iface := range interfaces {
-			if iface.Name == cb.interfaceName {
+			text := ""
+			if cb.hadInterface((iface.Name)) {
 				if len(iface.Addrs) == 0 {
-					text = "D"
-					break
+					text = "Disconnected"
+				} else {
+					text = strings.Split(iface.Addrs[0].Addr, "/")[0]
+					text = strings.Replace(text, "192.168", `<span size="6000">192.168</span>`, -1)
 				}
-				text = strings.Split(iface.Addrs[0].Addr, "/")[0]
-				text = strings.Replace(text, "192.168", `<span size="6000">192.168</span>`, -1)
-				break
+
+				fullText += text + " "
 			}
 		}
 	}
+
 	return barBlockData{
-		FullText: text,
+		FullText: fullText,
 		Markup:   "pango",
 	}
 }
