@@ -8,7 +8,7 @@ import (
 
 var blocks = []barBlock{
 	&ipAddressBlock{
-		interfaceNames: []string{"enp3s0", "wlp3s0", "enx503eaa70e8da"},
+		interfaceNames: []string{"enp3s0", "wlp3s0", "enx503eaa70e8da", "enp0s20f0u1u4"},
 	},
 	&resourceChartBlock{
 		dangerTreshhold: 70,
