@@ -4,7 +4,7 @@ type barBlockData struct {
 	Name     string `json:"name,omitempty"`
 	Instance string `json:"instance,omitempty"`
 
-	FullText  string `json:"full_text,omitempty"`
+	FullText  string `json:"full_text"`
 	ShortText string `json:"short_text,omitempty"`
 
 	Color      string `json:"color,omitempty"`
