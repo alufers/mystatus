@@ -30,7 +30,7 @@ func (cb *ipAddressBlock) Render() barBlockData {
 			text := ""
 			if cb.hadInterface((iface.Name)) {
 				if len(iface.Addrs) == 0 {
-					text = "Disconnected"
+					text = "---"
 				} else {
 					text = strings.Split(iface.Addrs[0].Addr, "/")[0]
 					text = strings.Replace(text, "192.168", `<span size="6000">192.168</span>`, -1)

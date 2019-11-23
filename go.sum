@@ -4,6 +4,8 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/distatus/battery v0.9.0 h1:8NS5o00/j3Oh2xgocA6pQROTp5guoR+s8CZlWzHC4QM=
 github.com/distatus/battery v0.9.0/go.mod h1:gGO7GxHTi1zlRT+cAj8uGG0/8HFiqAeH0TJvoipnuPs=
 github.com/go-ole/go-ole v1.2.1/go.mod h1:7FAglXiTm7HKlQRDeOQ6ZNUHidzCWXuZWq/1dTyBNF8=
+github.com/itchyny/volume-go v0.0.0 h1:W5VNZZ8Ouvf1uD5eo53LH8ZfnvKvnwDt0Dcj02i4a7I=
+github.com/itchyny/volume-go v0.0.0/go.mod h1:xkUTLgHTs4ZDlXPfh1rGHFQr3LQUfaGe2yQ070CFPlo=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/shirou/gopsutil v0.0.0-20180427012116-c95755e4bcd7 h1:80VN+vGkqM773Br/uNNTSheo3KatTgV8IpjIKjvVLng=
