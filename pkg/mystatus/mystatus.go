@@ -1,8 +1,12 @@
 package mystatus
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
+	"sync"
 	"time"
 )
 
@@ -29,6 +33,10 @@ var blocks = []barBlock{
 	},
 }
 
+var lastData = []barBlockData{}
+var lastDataMutex = sync.RWMutex{}
+var forceRerender = make(chan interface{}, 10)
+
 func printJSON(data interface{}) {
 	jsonOut, err := json.Marshal(data)
 	if err != nil {
@@ -39,9 +47,37 @@ func printJSON(data interface{}) {
 
 func printHeader() {
 	printJSON(map[string]interface{}{
-		"version": 1,
+		"version":      1,
+		"click_events": true,
 	})
 	fmt.Print("\n")
+}
+
+func inputEventsScanner() {
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		line := scanner.Text()
+		lineWithoutTheComma := strings.TrimPrefix(line, ",")
+		var event = &InputEvent{}
+		err := json.Unmarshal([]byte(lineWithoutTheComma), &event)
+		if err == nil {
+			func() {
+				lastDataMutex.RLock()
+				defer lastDataMutex.RUnlock()
+				for _, d := range lastData {
+					if d.Name != "" && d.Instance != "" && d.Name == event.Name && d.Instance == event.Instance {
+						if d.Block != nil {
+							if handler, ok := d.Block.(EventHandlingBlock); ok {
+
+								handler.HandleEvent(event)
+							}
+						}
+					}
+				}
+			}()
+			forceRerender <- nil
+		}
+	}
 }
 
 func printBar() {
@@ -50,6 +86,9 @@ func printBar() {
 		data := b.Render()
 		combinedBlockData = append(combinedBlockData, data)
 	}
+	lastDataMutex.Lock()
+	defer lastDataMutex.Unlock()
+	lastData = combinedBlockData
 	printJSON(combinedBlockData)
 	fmt.Print("\n")
 	fmt.Print(",")
@@ -59,10 +98,15 @@ func printBar() {
 Run is the real entry func of the program
 */
 func Run() {
+	go inputEventsScanner()
 	printHeader()
 	fmt.Println("[")
 	for {
 		printBar()
-		time.Sleep(time.Second)
+		select {
+		case <-time.After(time.Second):
+		case <-forceRerender:
+		}
+
 	}
 }

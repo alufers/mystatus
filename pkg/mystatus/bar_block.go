@@ -1,6 +1,8 @@
 package mystatus
 
 type barBlockData struct {
+	Block barBlock `json:"-"`
+
 	Name     string `json:"name,omitempty"`
 	Instance string `json:"instance,omitempty"`
 

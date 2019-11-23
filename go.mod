@@ -9,5 +9,6 @@ require (
 	github.com/itchyny/volume-go v0.0.0
 	github.com/shirou/gopsutil v0.0.0-20180427012116-c95755e4bcd7
 	github.com/stretchr/testify v1.3.0 // indirect
+	go.i3wm.org/i3/v4 v4.17.0
 	golang.org/x/sys v0.0.0-20180525142821-c11f84a56e43
 )
