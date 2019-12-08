@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+// ^[A-Za-z]*\ +([A-Za-z\:]*)\ +(.*)
+
 var blocks = []barBlock{
 	&ipAddressBlock{
 		interfaceNames: []string{"enp3s0", "wlp3s0", "enx503eaa70e8da", "enp0s20f0u1u4"},
@@ -28,6 +30,10 @@ var blocks = []barBlock{
 	},
 	&batteryBlock{},
 	&volumeBlock{},
+	&currentTrackBlock{
+		currentTrackInfoMutex: sync.RWMutex{},
+		currentTrackInfo:      map[string]string{},
+	},
 	&clockBlock{
 		format: "2006-01-02 15:04:05",
 	},
@@ -99,6 +105,11 @@ Run is the real entry func of the program
 */
 func Run() {
 	go inputEventsScanner()
+	for _, blk := range blocks {
+		if initable, ok := blk.(initableBarBlock); ok {
+			initable.Init()
+		}
+	}
 	printHeader()
 	fmt.Println("[")
 	for {

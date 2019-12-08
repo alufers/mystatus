@@ -24,3 +24,8 @@ type barBlockData struct {
 type barBlock interface {
 	Render() barBlockData
 }
+
+type initableBarBlock interface {
+	barBlock
+	Init()
+}
