@@ -1,6 +1,7 @@
 package mystatus
 
 import (
+	"os"
 	"strings"
 
 	"github.com/shirou/gopsutil/net"
@@ -23,12 +24,23 @@ func (cb *ipAddressBlock) hadInterface(name string) bool {
 func (cb *ipAddressBlock) Render() barBlockData {
 	fullText := ""
 	interfaces, err := net.Interfaces()
+
 	if err != nil {
 		fullText = "IP error: " + err.Error()
 	} else {
 		for _, iface := range interfaces {
 			text := ""
-			if cb.hadInterface((iface.Name)) {
+			if iface.Name == "lo" {
+				continue
+			}
+			if _, err := os.Stat("/sys/class/net/" + iface.Name); err == nil {
+				var emoji string
+
+				if _, err := os.Stat("/sys/class/net/" + iface.Name + "/wireless"); err == nil { // check is is wiereless
+					emoji += "📡"
+				} else {
+					emoji += "🔌"
+				}
 				if len(iface.Addrs) == 0 {
 					text = "---"
 				} else {
@@ -36,7 +48,7 @@ func (cb *ipAddressBlock) Render() barBlockData {
 					text = strings.Replace(text, "192.168", `<span size="6000">192.168</span>`, -1)
 				}
 
-				fullText += text + " "
+				fullText += emoji + text + " "
 			}
 		}
 	}

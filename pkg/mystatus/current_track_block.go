@@ -65,18 +65,21 @@ func (ctb *currentTrackBlock) Render() barBlockData {
 	defer ctb.currentTrackInfoMutex.RUnlock()
 
 	statusIcon := ""
+	color := "lightgray"
 	switch ctb.currentTrackInfo["status"] {
 	case "Playing":
 		statusIcon = "⏸️"
+		color = "white"
 	case "Paused":
 		statusIcon = "▶️"
+		color = "lightgray"
 	}
 	return barBlockData{
 		Block:    ctb,
 		Name:     "current_track",
 		Instance: "master",
 		Markup:   "pango",
-		FullText: fmt.Sprintf("%s %s - %s", statusIcon, ctb.currentTrackInfo["artist"], ctb.currentTrackInfo["title"]),
+		FullText: fmt.Sprintf(`<span foreground="%s">%s %s - %s</span>`, color, statusIcon, ctb.currentTrackInfo["artist"], ctb.currentTrackInfo["title"]),
 	}
 }
 

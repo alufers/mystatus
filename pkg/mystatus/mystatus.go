@@ -39,7 +39,7 @@ var blocks = []barBlock{
 		currentTrackInfo:      map[string]string{},
 	},
 	&clockBlock{
-		format: "2006-01-02 15:04:05",
+		format: "2006-01-02 <b>15:04:05</b>",
 	},
 }
 

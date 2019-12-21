@@ -12,6 +12,7 @@ func (cb *clockBlock) Render() barBlockData {
 	return barBlockData{
 		Name:     "clock",
 		Instance: "local",
-		FullText: time.Now().Format(cb.format),
+		Markup:   "pango",
+		FullText: time.Now().Format(cb.format) + " ",
 	}
 }
