@@ -28,6 +28,10 @@ var blocks = []barBlock{
 		baseColor:       "#2ecc71",
 		dangerColor:     "#e67e22",
 	},
+	&currentWeatherBlock{
+		Location:        "Rybnik",
+		RecheckInterval: time.Minute * 5,
+	},
 	&batteryBlock{},
 	&volumeBlock{},
 	&currentTrackBlock{
