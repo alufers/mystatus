@@ -43,9 +43,11 @@ var blocks = []barBlock{
 	},
 }
 
+//lastData stores the data returned from rendering the blocks so that the inputEventHandlers knows where to dispatch the data
 var lastData = []barBlockData{}
 var lastDataMutex = sync.RWMutex{}
 var forceRerender = make(chan interface{}, 10)
+var lastTick time.Time = time.Now()
 
 func printJSON(data interface{}) {
 	jsonOut, err := json.Marshal(data)
@@ -90,6 +92,15 @@ func inputEventsScanner() {
 	}
 }
 
+func performTick() {
+	lastTick = time.Now()
+	for _, b := range blocks {
+		if tickable, ok := b.(tickableBarBlock); ok {
+			tickable.Tick()
+		}
+	}
+}
+
 func printBar() {
 	combinedBlockData := []barBlockData{}
 	for _, b := range blocks {
@@ -116,7 +127,11 @@ func Run() {
 	}
 	printHeader()
 	fmt.Println("[")
+	performTick()
 	for {
+		if time.Now().Sub(lastTick) >= time.Second {
+			performTick()
+		}
 		printBar()
 		select {
 		case <-time.After(time.Second):

@@ -29,3 +29,8 @@ type initableBarBlock interface {
 	barBlock
 	Init()
 }
+
+type tickableBarBlock interface {
+	barBlock
+	Tick()
+}

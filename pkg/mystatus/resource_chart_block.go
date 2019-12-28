@@ -15,38 +15,43 @@ type resourceChartBlock struct {
 	chartType       string
 	baseColor       string
 	dangerColor     string
+
+	resourcePercent float64
+	resourceError   error
 }
 
-func (ccb *resourceChartBlock) Render() barBlockData {
+func (ccb *resourceChartBlock) Tick() {
 
-	var resourcePercent float64
-	var resourceError error
 	if ccb.chartType == "cpu" {
 		cpuData, err := cpu.Percent(0, false)
-		resourcePercent = cpuData[0]
-		resourceError = err
+		ccb.resourcePercent = cpuData[0]
+		ccb.resourceError = err
 	} else if ccb.chartType == "mem" {
 		virtStat, err := mem.VirtualMemory()
-		resourcePercent = virtStat.UsedPercent
-		resourceError = err
+		ccb.resourcePercent = virtStat.UsedPercent
+		ccb.resourceError = err
 	} else {
 		panic(errors.New("Invalid chartType"))
 	}
 
-	var text string
-	if resourceError != nil {
-		text = "CPU error: " + resourceError.Error()
-	} else {
-
+	if ccb.resourceError == nil {
 		if len(ccb.history) < 10 {
 			for i := 0; i < 10; i++ {
 				ccb.history = append(ccb.history, 0)
 			}
 		}
+		ccb.history = append(ccb.history[1:], ccb.resourcePercent)
+	}
 
-		ccb.history = append(ccb.history[1:], resourcePercent)
+}
 
-		text += `<span rise="5000" size="5000">` + strconv.Itoa(int(resourcePercent)) + `</span>`
+func (ccb *resourceChartBlock) Render() barBlockData {
+
+	var text string
+	if ccb.resourceError != nil {
+		text = "CPU error: " + ccb.resourceError.Error()
+	} else {
+		text += `<span rise="5000" size="5000">` + strconv.Itoa(int(ccb.resourcePercent)) + `</span>`
 
 		for i := 0; i < len(ccb.history); i++ {
 			resultingColor := ccb.baseColor
