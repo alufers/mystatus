@@ -47,7 +47,13 @@ func (cwb *currentWeatherBlock) Render() barBlockData {
 		color = "#aaaaaa"
 	}
 	if cwb.LastResponse != nil {
-		text = cwb.LastResponse.CurrentCondition[0].TempC + "°C"
+		var emoji string
+		if name, ok := WeatherCodesToNames[cwb.LastResponse.CurrentCondition[0].WeatherCode]; ok {
+			if emojiValue, ok := WeatherNamesToEmoji[name]; ok {
+				emoji = emojiValue
+			}
+		}
+		text = fmt.Sprintf("%s %s", emoji, cwb.LastResponse.CurrentCondition[0].TempC+"°C")
 	}
 	return barBlockData{
 		Name:     "weather",
