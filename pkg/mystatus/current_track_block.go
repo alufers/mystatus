@@ -3,6 +3,7 @@ package mystatus
 import (
 	"bufio"
 	"fmt"
+	"html"
 	"log"
 	"os/exec"
 	"regexp"
@@ -79,7 +80,7 @@ func (ctb *currentTrackBlock) Render() barBlockData {
 		Name:     "current_track",
 		Instance: "master",
 		Markup:   "pango",
-		FullText: fmt.Sprintf(`<span foreground="%s">%s %s - %s</span>`, color, statusIcon, ctb.currentTrackInfo["artist"], ctb.currentTrackInfo["title"]),
+		FullText: fmt.Sprintf(`<span foreground="%s">%s %s - %s</span>`, color, statusIcon, html.EscapeString(ctb.currentTrackInfo["artist"]), html.EscapeString(ctb.currentTrackInfo["title"])),
 	}
 }
 
