@@ -8,6 +8,9 @@ import (
 	"os/exec"
 	"regexp"
 	"sync"
+
+	"github.com/alufers/mystatus/pkg/mousekeys"
+	"go.i3wm.org/i3/v4"
 )
 
 type currentTrackBlock struct {
@@ -85,9 +88,11 @@ func (ctb *currentTrackBlock) Render() barBlockData {
 }
 
 func (ctb *currentTrackBlock) HandleEvent(ie *InputEvent) {
-	if ie.Button == 1 {
-
+	switch ie.Button {
+	case mousekeys.Left:
 		cmd := exec.Command("playerctl", "play-pause")
 		cmd.Run()
+	case mousekeys.Right:
+		i3.RunCommand("[class=Spotify] focus")
 	}
 }

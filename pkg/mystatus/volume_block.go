@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/alufers/mystatus/pkg/mousekeys"
 	"go.i3wm.org/i3/v4"
 )
 
@@ -58,42 +59,34 @@ func (vb *volumeBlock) Render() barBlockData {
 }
 
 func (vb *volumeBlock) HandleEvent(ie *InputEvent) {
-
-	// louden
-	if ie.Button == 4 {
+	switch ie.Button {
+	case mousekeys.ScrollUp: // louden
 		cmd := exec.Command("bash", "-c", "amixer -q sset Master 3%+")
 		_, _ = cmd.Output()
-
-	}
-	// lower volume
-	if ie.Button == 5 {
+	case mousekeys.ScrollDown: // lower volume
 		cmd := exec.Command("bash", "-c", "amixer -q sset Master 3%-")
 		_, _ = cmd.Output()
-	}
-
-	// mute/unmute
-	if ie.Button == 3 {
+	case mousekeys.Middle: // mute/unmute
 		cmd := exec.Command("bash", "-c", "amixer -q sset Master toggle")
 		_, _ = cmd.Output()
-	}
+	case mousekeys.Left: // open pavucontrol
+		if ie.Button == 1 {
+			cmd := exec.Command("pavucontrol")
+			cmd.Start()
+			go func() {
+				recv := i3.Subscribe(i3.WindowEventType)
+				defer recv.Close()
+				for recv.Next() {
+					ev := recv.Event().(*i3.WindowEvent)
+					if ev.Change == "focus" && ev.Container.WindowProperties.Class != "Pavucontrol" {
+						cmd.Process.Kill()
+						return
+					}
 
-	// open pavucontrol
-	if ie.Button == 1 {
-		cmd := exec.Command("pavucontrol")
-		cmd.Start()
-		go func() {
-			recv := i3.Subscribe(i3.WindowEventType)
-			defer recv.Close()
-			for recv.Next() {
-				ev := recv.Event().(*i3.WindowEvent)
-				if ev.Change == "focus" && ev.Container.WindowProperties.Class != "Pavucontrol" {
-					cmd.Process.Kill()
-					return
 				}
 
-			}
-
-		}()
+			}()
+		}
 	}
 
 }

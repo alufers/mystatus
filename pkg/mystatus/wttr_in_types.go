@@ -1,5 +1,7 @@
 package mystatus
 
+// Generated with https://mholt.github.io/json-to-go/
+
 type WttrInResponse struct {
 	CurrentCondition []CurrentCondition `json:"current_condition"`
 	NearestArea      []NearestArea      `json:"nearest_area"`

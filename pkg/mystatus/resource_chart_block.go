@@ -35,8 +35,8 @@ func (ccb *resourceChartBlock) Tick() {
 	}
 
 	if ccb.resourceError == nil {
-		if len(ccb.history) < 10 {
-			for i := 0; i < 10; i++ {
+		if len(ccb.history) < 30 {
+			for i := 0; i < 30; i++ {
 				ccb.history = append(ccb.history, 0)
 			}
 		}
@@ -51,7 +51,7 @@ func (ccb *resourceChartBlock) Render() barBlockData {
 	if ccb.resourceError != nil {
 		text = "CPU error: " + ccb.resourceError.Error()
 	} else {
-		text += `<span rise="5000" size="5000">` + strconv.Itoa(int(ccb.resourcePercent)) + `</span>`
+		text += fmt.Sprintf(`<span rise="3000" size="10000">%02d</span>`, int(ccb.resourcePercent))
 
 		for i := 0; i < len(ccb.history); i++ {
 			resultingColor := ccb.baseColor
