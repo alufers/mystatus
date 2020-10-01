@@ -3,8 +3,11 @@ package mystatus
 import (
 	"errors"
 	"fmt"
+	"os/exec"
 	"strconv"
+	"strings"
 
+	"github.com/alufers/mystatus/pkg/mousekeys"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
 )
@@ -49,7 +52,7 @@ func (ccb *resourceChartBlock) Render() barBlockData {
 
 	var text string
 	if ccb.resourceError != nil {
-		text = "CPU error: " + ccb.resourceError.Error()
+		text = "Error: " + ccb.resourceError.Error()
 	} else {
 		text += fmt.Sprintf(`<span rise="3000" size="10000">%02d</span>`, int(ccb.resourcePercent))
 
@@ -64,7 +67,20 @@ func (ccb *resourceChartBlock) Render() barBlockData {
 	}
 
 	return barBlockData{
+		Block:    ccb,
+		Name:     "resource_chart",
+		Instance: ccb.chartType,
 		FullText: text,
 		Markup:   "pango",
 	}
 }
+
+func (ccb *resourceChartBlock) HandleEvent(ie *InputEvent) {
+	switch ie.Button {
+	case mousekeys.Left:
+		cmd := exec.Command("kitty", strings.Split("--class i3_float_mouse --override remember_window_size=false --override initial_window_height=650 --override initial_window_width=950 htop", " ")...)
+		cmd.Run()
+	}
+}
+
+//
