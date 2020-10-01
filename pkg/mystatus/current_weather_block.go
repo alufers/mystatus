@@ -3,6 +3,7 @@ package mystatus
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -30,19 +31,24 @@ func (cwb *currentWeatherBlock) Render() barBlockData {
 		if err == nil {
 			decoder := json.NewDecoder(resp.Body)
 			var data *WttrInResponse
-
 			if decodeErr := decoder.Decode(&data); decodeErr != nil {
+				log.Print(decodeErr)
 				cwb.LastCheckError = fmt.Errorf("failed to parser JSON response: %w", decodeErr)
+				cwb.LastResponse = nil
 			} else {
 				cwb.LastCheckError = nil
 				cwb.LastResponse = data
 			}
+		} else {
+
 		}
 	}
 	var text string
 	var color string
-	if cwb.LastCheckError == nil {
+	if cwb.LastCheckError == nil && cwb.LastResponse != nil {
 		color = "#ffffff"
+	} else if cwb.LastCheckError == nil {
+		color = "#ffaaaa"
 	} else {
 		color = "#aaaaaa"
 	}
@@ -54,6 +60,9 @@ func (cwb *currentWeatherBlock) Render() barBlockData {
 			}
 		}
 		text = fmt.Sprintf("%s %s", emoji, cwb.LastResponse.CurrentCondition[0].TempC+"°C")
+	}
+	if cwb.LastCheckError == nil && cwb.LastResponse == nil {
+		text = "E:" + cwb.LastCheckError.Error()
 	}
 	return barBlockData{
 		Name:     "weather",

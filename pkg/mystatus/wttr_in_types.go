@@ -2,6 +2,7 @@ package mystatus
 
 type WttrInResponse struct {
 	CurrentCondition []CurrentCondition `json:"current_condition"`
+	NearestArea      []NearestArea      `json:"nearest_area"`
 	Request          []Request          `json:"request"`
 	Weather          []Weather          `json:"weather"`
 }
@@ -12,24 +13,46 @@ type WeatherIconURL struct {
 	Value string `json:"value"`
 }
 type CurrentCondition struct {
-	FeelsLikeC      string           `json:"FeelsLikeC"`
-	FeelsLikeF      string           `json:"FeelsLikeF"`
-	Cloudcover      string           `json:"cloudcover"`
-	Humidity        string           `json:"humidity"`
-	ObservationTime string           `json:"observation_time"`
-	PrecipMM        string           `json:"precipMM"`
-	Pressure        string           `json:"pressure"`
-	TempC           string           `json:"temp_C"`
-	TempF           string           `json:"temp_F"`
-	UvIndex         int              `json:"uvIndex"`
-	Visibility      string           `json:"visibility"`
-	WeatherCode     string           `json:"weatherCode"`
-	WeatherDesc     []WeatherDesc    `json:"weatherDesc"`
-	WeatherIconURL  []WeatherIconURL `json:"weatherIconUrl"`
-	Winddir16Point  string           `json:"winddir16Point"`
-	WinddirDegree   string           `json:"winddirDegree"`
-	WindspeedKmph   string           `json:"windspeedKmph"`
-	WindspeedMiles  string           `json:"windspeedMiles"`
+	FeelsLikeC       string           `json:"FeelsLikeC"`
+	FeelsLikeF       string           `json:"FeelsLikeF"`
+	Cloudcover       string           `json:"cloudcover"`
+	Humidity         string           `json:"humidity"`
+	LocalObsDateTime string           `json:"localObsDateTime"`
+	ObservationTime  string           `json:"observation_time"`
+	PrecipMM         string           `json:"precipMM"`
+	Pressure         string           `json:"pressure"`
+	TempC            string           `json:"temp_C"`
+	TempF            string           `json:"temp_F"`
+	UvIndex          string           `json:"uvIndex"`
+	Visibility       string           `json:"visibility"`
+	WeatherCode      string           `json:"weatherCode"`
+	WeatherDesc      []WeatherDesc    `json:"weatherDesc"`
+	WeatherIconURL   []WeatherIconURL `json:"weatherIconUrl"`
+	Winddir16Point   string           `json:"winddir16Point"`
+	WinddirDegree    string           `json:"winddirDegree"`
+	WindspeedKmph    string           `json:"windspeedKmph"`
+	WindspeedMiles   string           `json:"windspeedMiles"`
+}
+type AreaName struct {
+	Value string `json:"value"`
+}
+type Country struct {
+	Value string `json:"value"`
+}
+type Region struct {
+	Value string `json:"value"`
+}
+type WeatherURL struct {
+	Value string `json:"value"`
+}
+type NearestArea struct {
+	AreaName   []AreaName   `json:"areaName"`
+	Country    []Country    `json:"country"`
+	Latitude   string       `json:"latitude"`
+	Longitude  string       `json:"longitude"`
+	Population string       `json:"population"`
+	Region     []Region     `json:"region"`
+	WeatherURL []WeatherURL `json:"weatherUrl"`
 }
 type Request struct {
 	Query string `json:"query"`

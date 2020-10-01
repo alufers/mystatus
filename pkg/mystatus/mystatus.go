@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"sync"
@@ -72,6 +73,7 @@ func inputEventsScanner() {
 		lineWithoutTheComma := strings.TrimPrefix(line, ",")
 		var event = &InputEvent{}
 		err := json.Unmarshal([]byte(lineWithoutTheComma), &event)
+		log.Printf("input ev: %#v", event)
 		if err == nil {
 			func() {
 				lastDataMutex.RLock()
@@ -119,6 +121,14 @@ func printBar() {
 Run is the real entry func of the program
 */
 func Run() {
+	os.MkdirAll(os.ExpandEnv("$HOME/.local/log"), 0777)
+	f, err := os.OpenFile(os.ExpandEnv("$HOME/.local/log/mystatus.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer f.Close()
+
+	log.SetOutput(f)
 	go inputEventsScanner()
 	for _, blk := range blocks {
 		if initable, ok := blk.(initableBarBlock); ok {

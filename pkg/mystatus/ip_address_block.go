@@ -1,6 +1,7 @@
 package mystatus
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -41,6 +42,16 @@ func (cb *ipAddressBlock) Render() barBlockData {
 				} else {
 					emoji += "🔌"
 				}
+				isVirtual := false
+				linkDest, err := os.Readlink(fmt.Sprintf("/sys/class/net/%s", iface.Name))
+				if err == nil {
+					if strings.Contains(linkDest, "/virtual/") {
+						isVirtual = true
+					}
+				}
+				if isVirtual {
+					continue
+				}
 				if len(iface.Addrs) == 0 {
 					text = "---"
 				} else {
@@ -54,6 +65,7 @@ func (cb *ipAddressBlock) Render() barBlockData {
 	}
 
 	return barBlockData{
+		Block:    cb,
 		FullText: fullText,
 		Markup:   "pango",
 	}

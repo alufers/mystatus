@@ -86,6 +86,7 @@ func (ctb *currentTrackBlock) Render() barBlockData {
 
 func (ctb *currentTrackBlock) HandleEvent(ie *InputEvent) {
 	if ie.Button == 1 {
+
 		cmd := exec.Command("playerctl", "play-pause")
 		cmd.Run()
 	}
